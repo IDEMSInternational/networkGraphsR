@@ -53,7 +53,7 @@ map_data <- function(data, values, node_values, colour_values = NULL) {
     data_1 <- data %>%
       dplyr::select(c(id = {{ values }}, group_type = {{ colour_values }}))
     df_expanded <- df_expanded %>%
-      left_join(data_1, by = "id") %>%
+      dplyr::left_join(data_1, by = "id") %>%
       #rename(group_type = {{ colour_values }}) %>%
       dplyr::distinct() %>%
       dplyr::mutate(id_index = dplyr::row_number() - 1) %>%
@@ -64,7 +64,7 @@ map_data <- function(data, values, node_values, colour_values = NULL) {
   df_mapped <- data %>%
     dplyr::left_join(df_expanded, by = setNames("id", values)) %>%
     dplyr::rename(source = id_index) 
-
+  
   df_mapped <- df_mapped %>%
     tidyr::pivot_longer(cols = all_of({{ node_values }}), values_to = "id") %>%
     dplyr::distinct() %>%
